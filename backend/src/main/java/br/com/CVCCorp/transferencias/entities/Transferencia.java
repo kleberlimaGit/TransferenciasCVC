@@ -32,7 +32,7 @@ public class Transferencia implements Serializable {
 
 	private Double rate;
 
-	@DateTimeFormat(iso = ISO.DATE, pattern = "dd/MM/yyyy")
+	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate transferDate;
 
 	private LocalDate schedulingDate = LocalDate.now();

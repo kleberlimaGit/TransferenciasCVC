@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ public class TransferenciaDTO implements Serializable{
 	private String destinationAccount;
 	
 	@NotNull(message = "Valor de transferência deve ser preenchido.")
+	@DecimalMin(value = "1", message = "Valor da transferência precisa ser no mínimo R$ 1,00." )
 	private BigDecimal transferAmount;
 	private Double rate;
 	@FutureOrPresent(message = "Data não pode ser anterior a hoje.")

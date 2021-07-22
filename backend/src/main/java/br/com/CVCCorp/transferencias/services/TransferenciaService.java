@@ -2,17 +2,21 @@ package br.com.CVCCorp.transferencias.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.CVCCorp.transferencias.dto.TransferenciaDTO;
 import br.com.CVCCorp.transferencias.entities.Transferencia;
 import br.com.CVCCorp.transferencias.repositories.TransferenciaRepository;
+import br.com.CVCCorp.transferencias.services.exceptions.ResourceNotFoundException;
 import br.com.CVCCorp.transferencias.services.exceptions.WrongArgumentException;
 
 @Service
@@ -37,14 +41,41 @@ public class TransferenciaService {
 		copyToEntity(dto, transferencia);
 		validateRate(dto,transferencia);
 		
+		transferencia = repository.save(transferencia);
+		
 		return new TransferenciaDTO(transferencia);			
+	}
+	
+	@Transactional
+	public TransferenciaDTO updateTransfer(Long id, TransferenciaDTO dto) {
+		try {
+			Transferencia transferencia = repository.getOne(id);
+			copyToEntity(dto, transferencia);
+			validateRate(dto,transferencia);
+			transferencia = repository.save(transferencia);
+			
+			return new TransferenciaDTO(transferencia);	
+		}
+		catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Transferencia não identificada " + id);
+		}
+	}
+	
+	@Transactional
+	public void deleteTransfer(Long id) {
+		try {
+			repository.deleteById(id);
+		}
+		catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Transferencia não identificada " + id);
+		}
 	}
 
 	
 	public void validateRate(TransferenciaDTO dto, Transferencia entity) {
 		LocalDate today = LocalDate.now();
 		LocalDate transferDate = dto.getTransferDate();
-		int daysToTransfer = Period.between(today, transferDate).getDays();
+		long daysToTransfer = ChronoUnit.DAYS.between(today, transferDate);
 		
 		if(transferDate.isEqual(today)) {
 			transferOnTheDay(dto,entity);
@@ -60,22 +91,21 @@ public class TransferenciaService {
 	public void transferOnTheDay(TransferenciaDTO dto, Transferencia entity) {
 		BigDecimal amount = dto.getTransferAmount();
 		double tax = 3.0;
-		double percentOnValue = 1.03;
+		double percentOnValue = 0.03;
 		Double rateValue = amount.doubleValue()*percentOnValue + tax;
 		
 		entity.setRate(rateValue);
 	}
 	
 	// transferencia com até 10 dias para a operação
-	public void transferWithinTenDays(TransferenciaDTO dto, Transferencia entity, int numberOfDays) {
-		BigDecimal amount = dto.getTransferAmount();
+	public void transferWithinTenDays(TransferenciaDTO dto, Transferencia entity, long numberOfDays) {
 		double tax = 12.0*numberOfDays;
-		double rateValue = amount.doubleValue() + tax;
+		double rateValue = tax;
 	
 		entity.setRate(rateValue);
 	}
 	// transferencia acima de 10 dias para a operação
-	public void transferOverTenDays(TransferenciaDTO dto, Transferencia entity, int numberOfDays) {
+	public void transferOverTenDays(TransferenciaDTO dto, Transferencia entity, long numberOfDays) {
 		Double amount = dto.getTransferAmount().doubleValue();
 		double businessValue = 100000.00;
 		double rateValue = 0.0;
@@ -101,7 +131,6 @@ public class TransferenciaService {
 	
 	// copiar dto para entitade
 	public void copyToEntity(TransferenciaDTO dto, Transferencia entity ) {
-		entity.setId(dto.getId());
 		entity.setDestinationAccount(dto.getDestinationAccount());
 		entity.setOriginAccount(dto.getOriginAccount());
 		entity.setTransferDate(dto.getTransferDate());
