@@ -1,13 +1,14 @@
 package br.com.CVCCorp.transferencias.dto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 import br.com.CVCCorp.transferencias.entities.Transferencia;
 
@@ -18,23 +19,29 @@ public class TransferenciaDTO implements Serializable{
 	private Long id;
 	
 	@NotBlank(message = "Conta de origem deve ser preenchida.")
+	@Length(max = 6, message = "Conta não pode ter mais do que 6 caracteres.")
 	private String originAccount;
+	
 	@NotBlank(message = "Conta de destino deve ser preenchida.")
+	@Length(max = 6, message = "Conta não pode ter mais do que 6 caracteres.")
 	private String destinationAccount;
 	
 	@NotNull(message = "Valor de transferência deve ser preenchido.")
 	@DecimalMin(value = "1", message = "Valor da transferência precisa ser no mínimo R$ 1,00." )
-	private BigDecimal transferAmount;
+	private Double transferAmount;
+	
 	private Double rate;
+	
 	@FutureOrPresent(message = "Data não pode ser anterior a hoje.")
 	private LocalDate transferDate;
+	
 	private LocalDate schedulingDate;
 	
 	public TransferenciaDTO() {
 		
 	}
 
-	public TransferenciaDTO(Long id, String originAccount, String destinationAccount, BigDecimal transferAmount,
+	public TransferenciaDTO(Long id, String originAccount, String destinationAccount, Double transferAmount,
 			 LocalDate transferDate) {
 		this.id = id;
 		this.originAccount = originAccount;
@@ -77,11 +84,11 @@ public class TransferenciaDTO implements Serializable{
 		this.destinationAccount = destinationAccount;
 	}
 
-	public BigDecimal getTransferAmount() {
+	public Double getTransferAmount() {
 		return transferAmount;
 	}
 
-	public void setTransferAmount(BigDecimal transferAmount) {
+	public void setTransferAmount(Double transferAmount) {
 		this.transferAmount = transferAmount;
 	}
 

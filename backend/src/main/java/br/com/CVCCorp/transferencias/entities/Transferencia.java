@@ -1,7 +1,6 @@
 package br.com.CVCCorp.transferencias.entities;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -28,7 +27,7 @@ public class Transferencia implements Serializable {
 	@Column(length = 6)
 	private String destinationAccount;
 
-	private BigDecimal transferAmount;
+	private Double transferAmount;
 
 	private Double rate;
 
@@ -41,13 +40,12 @@ public class Transferencia implements Serializable {
 
 	}
 
-	public Transferencia(Long id, String originAccount, String destinationAccount, BigDecimal transferAmount,
-			Double rate, LocalDate transferDate) {
+	public Transferencia(Long id, String originAccount, String destinationAccount, Double transferAmount,
+			LocalDate transferDate) {
 		this.id = id;
 		this.originAccount = originAccount;
 		this.destinationAccount = destinationAccount;
 		this.transferAmount = transferAmount;
-		this.rate = rate;
 		this.transferDate = transferDate;
 	}
 
@@ -75,11 +73,11 @@ public class Transferencia implements Serializable {
 		this.destinationAccount = destinationAccount;
 	}
 
-	public BigDecimal getTransferAmount() {
+	public Double getTransferAmount() {
 		return transferAmount;
 	}
 
-	public void setTransferAmount(BigDecimal transferAmount) {
+	public void setTransferAmount(Double transferAmount) {
 		this.transferAmount = transferAmount;
 	}
 

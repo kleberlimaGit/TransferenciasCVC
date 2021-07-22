@@ -1,6 +1,5 @@
 package br.com.CVCCorp.transferencias.services;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -89,10 +88,10 @@ public class TransferenciaService {
 	
 	// transferencia no dia da operação
 	public void transferOnTheDay(TransferenciaDTO dto, Transferencia entity) {
-		BigDecimal amount = dto.getTransferAmount();
+		Double amount = dto.getTransferAmount();
 		double tax = 3.0;
 		double percentOnValue = 0.03;
-		Double rateValue = amount.doubleValue()*percentOnValue + tax;
+		Double rateValue = amount*percentOnValue + tax;
 		
 		entity.setRate(rateValue);
 	}
@@ -106,12 +105,12 @@ public class TransferenciaService {
 	}
 	// transferencia acima de 10 dias para a operação
 	public void transferOverTenDays(TransferenciaDTO dto, Transferencia entity, long numberOfDays) {
-		Double amount = dto.getTransferAmount().doubleValue();
+		Double amount = dto.getTransferAmount();
 		double businessValue = 100000.00;
 		double rateValue = 0.0;
 		
 		
-		if(numberOfDays > 10 && numberOfDays < 20) {
+		if(numberOfDays > 10 && numberOfDays <= 20) {
 			rateValue = amount*0.08;
 			entity.setRate(rateValue);
 		}else if (numberOfDays <=30) {
@@ -120,8 +119,8 @@ public class TransferenciaService {
 		}else if(numberOfDays <= 40) {
 			rateValue = amount*0.04;
 			entity.setRate(rateValue);
-		}else if(numberOfDays > 40 && amount.doubleValue() < businessValue) {
-			throw new WrongArgumentException("Acima de 40 dias o valor da transferência não pode ser menor do que R$ 100.000,00 .");
+		}else if(numberOfDays > 40 && amount <= businessValue) {
+			throw new WrongArgumentException("Acima de 40 dias o valor da transferência deve ser maior do que R$ 100.000,00 .");
 		}else {
 			rateValue = amount*0.02;
 			entity.setRate(rateValue);
