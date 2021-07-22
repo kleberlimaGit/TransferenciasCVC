@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import br.com.CVCCorp.transferencias.entities.Transferencia;
 
 public class TransferenciaDTO implements Serializable{
@@ -11,10 +15,16 @@ public class TransferenciaDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
+	@NotBlank(message = "Conta de origem deve ser preenchida.")
 	private String originAccount;
+	@NotBlank(message = "Conta de destino deve ser preenchida.")
 	private String destinationAccount;
+	
+	@NotNull(message = "Valor de transferência deve ser preenchido.")
 	private BigDecimal transferAmount;
 	private Double rate;
+	@FutureOrPresent(message = "Data não pode ser anterior a hoje.")
 	private LocalDate transferDate;
 	private LocalDate schedulingDate;
 	
@@ -23,12 +33,11 @@ public class TransferenciaDTO implements Serializable{
 	}
 
 	public TransferenciaDTO(Long id, String originAccount, String destinationAccount, BigDecimal transferAmount,
-			Double rate, LocalDate transferDate) {
+			 LocalDate transferDate) {
 		this.id = id;
 		this.originAccount = originAccount;
 		this.destinationAccount = destinationAccount;
 		this.transferAmount = transferAmount;
-		this.rate = rate;
 		this.transferDate = transferDate;
 	}
 	
@@ -76,10 +85,6 @@ public class TransferenciaDTO implements Serializable{
 
 	public Double getRate() {
 		return rate;
-	}
-
-	public void setRate(Double rate) {
-		this.rate = rate;
 	}
 
 	public LocalDate getTransferDate() {
