@@ -24,7 +24,7 @@ public class ControllerExceptionHandler {
 		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(status.value());
-		err.setError("Página não encontrada.");
+		err.setError("Page not found.");
 		err.setMessage(e.getMessage());
 		err.setPath(request.getRequestURI());
 		
@@ -34,12 +34,12 @@ public class ControllerExceptionHandler {
 	
 	@ExceptionHandler(WrongArgumentException.class)
 	public ResponseEntity<StandardError> wrongArgument(WrongArgumentException e, HttpServletRequest request){
-		HttpStatus status = HttpStatus.BAD_REQUEST;
+		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 		
 		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(status.value());
-		err.setError("Parâmetro inválido.");
+		err.setError("Invalid paramter.");
 		err.setMessage(e.getMessage());
 		err.setPath(request.getRequestURI());
 		
@@ -55,7 +55,7 @@ public class ControllerExceptionHandler {
 		err.setTimestamp(Instant.now());
 		err.setStatus(status.value());
 		err.setError("Validation exception.");
-		err.setMessage("Erro de valição.");
+		err.setMessage("Validation Error.");
 		err.setPath(request.getRequestURI());
 		
 		for(FieldError f : e.getBindingResult().getFieldErrors()) {

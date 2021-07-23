@@ -56,7 +56,7 @@ public class TransferenciaService {
 			return new TransferenciaDTO(transferencia);	
 		}
 		catch(EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Transferencia não identificada " + id);
+			throw new ResourceNotFoundException("Unidentified transfer. " + id);
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class TransferenciaService {
 			repository.deleteById(id);
 		}
 		catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Transferencia não identificada " + id);
+			throw new ResourceNotFoundException("Unidentified transfer. " + id);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class TransferenciaService {
 			rateValue = amount*0.04;
 			entity.setRate(rateValue);
 		}else if(numberOfDays > 40 && amount <= businessValue) {
-			throw new WrongArgumentException("Acima de 40 dias o valor da transferência deve ser maior do que R$ 100.000,00 .");
+			throw new WrongArgumentException("Over 40 days, the transfer value must be greater than R$ 100,000.00 .");
 		}else {
 			rateValue = amount*0.02;
 			entity.setRate(rateValue);

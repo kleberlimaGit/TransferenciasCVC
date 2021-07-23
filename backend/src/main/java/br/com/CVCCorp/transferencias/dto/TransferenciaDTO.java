@@ -18,21 +18,21 @@ public class TransferenciaDTO implements Serializable{
 	
 	private Long id;
 	
-	@NotBlank(message = "Conta de origem deve ser preenchida.")
-	@Length(max = 6, message = "Conta não pode ter mais do que 6 caracteres.")
+	@NotBlank(message = "Origin account must be filled.")
+	@Length(max = 6, min = 6, message = "Origin account must be 6 characters long.")
 	private String originAccount;
 	
-	@NotBlank(message = "Conta de destino deve ser preenchida.")
-	@Length(max = 6, message = "Conta não pode ter mais do que 6 caracteres.")
+	@NotBlank(message = "Target account must be filled.")
+	@Length(max = 6, min = 6, message = "Target account must be 6 characters long.")
 	private String destinationAccount;
 	
-	@NotNull(message = "Valor de transferência deve ser preenchido.")
-	@DecimalMin(value = "1", message = "Valor da transferência precisa ser no mínimo R$ 1,00." )
+	@NotNull(message = "Transfer amount must be filled.")
+	@DecimalMin(value = "1", message = "Transfer amount must be at least R$1.00." )
 	private Double transferAmount;
 	
 	private Double rate;
 	
-	@FutureOrPresent(message = "Data não pode ser anterior a hoje.")
+	@FutureOrPresent(message = "Date cannot be earlier than today.")
 	private LocalDate transferDate;
 	
 	private LocalDate schedulingDate;

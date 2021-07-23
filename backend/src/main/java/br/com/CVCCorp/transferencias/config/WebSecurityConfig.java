@@ -32,6 +32,7 @@ public class WebSecurityConfig   extends WebSecurityConfigurerAdapter {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests().antMatchers(PUBLIC_MATCHERS).permitAll();
 	}
+	
 	// Configuração para o spring security liberar o acesso a documentação do swagger
 	@Override
 	public void configure(WebSecurity web) throws Exception {
